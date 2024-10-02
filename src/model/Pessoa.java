@@ -3,17 +3,17 @@ import java.util.Date;
 
 public class Pessoa  {
     private String nome;
-    private Date dataDeNascimento;
+    private String dataDeNascimento;
     private String genero;
     private String cpf;
     private String endereco;
     private String telefone;
     private String email;
-    private String senha;
+    private String senha; //usar um tipo de hashing
 
     public Pessoa(){}
 
-    public Pessoa(String nome, Date dataDeNascimento, String genero, String cpf, String endereco, String telefone, String email, String senha) {
+    public Pessoa(String nome, String dataDeNascimento, String genero, String cpf, String endereco, String telefone, String email, String senha) {
         this.nome = nome;
         this.dataDeNascimento = dataDeNascimento;
         this.genero = genero;

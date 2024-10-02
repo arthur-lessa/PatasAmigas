@@ -13,7 +13,7 @@ public class Adotantes extends Pessoa {
         this.adocoes = adocoes;
     }
 
-    public Adotantes(String nome, Date dataDeNascimento, String genero, String cpf, String endereco, String telefone, String email, String senha, int idAdotante, String preferenciasDeAdocao, String adocoes) {
+    public Adotantes(String nome, String dataDeNascimento, String genero, String cpf, String endereco, String telefone, String email, String senha, int idAdotante, String preferenciasDeAdocao, String adocoes) {
         super(nome, dataDeNascimento, genero, cpf, endereco, telefone, email, senha);
         this.idAdotante = idAdotante;
         this.preferenciasDeAdocao = preferenciasDeAdocao;

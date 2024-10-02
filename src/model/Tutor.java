@@ -1,7 +1,7 @@
 package model;
 import java.util.Date;
 
-public class Tutor extends  Pessoa{
+public class Tutor extends Pessoa{
 
     private int idTutor;
     private int numDeAnimais;
@@ -13,7 +13,7 @@ public class Tutor extends  Pessoa{
         this.adocoes = adocoes;
     }
 
-    public Tutor(String nome, Date dataDeNascimento, String genero, String cpf, String endereco, String telefone, String email, String senha, int idTutor, int numDeAnimais, String adocoes) {
+    public Tutor(String nome, String dataDeNascimento, String genero, String cpf, String endereco, String telefone, String email, String senha, int idTutor, int numDeAnimais, String adocoes) {
         super(nome, dataDeNascimento, genero, cpf, endereco, telefone, email, senha);
         this.idTutor = idTutor;
         this.numDeAnimais = numDeAnimais;
