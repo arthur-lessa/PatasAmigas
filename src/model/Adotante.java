@@ -1,27 +1,27 @@
 package model;
-import java.util.Date;
 
-public class Tutor extends Pessoa{
-    private int numDeAnimais;
+public class Adotante extends Pessoa {
+    private String preferenciasDeAdocao;
     private String adocoes;
     private String status;
 
-    public Tutor(String nome, String dataDeNascimento, String genero, String cpf,
-                 String endereco, String telefone, String email, String senha,
-                 int idTutor, int numDeAnimais, String adocoes, String status) {
-        super(nome, dataDeNascimento, genero, cpf, endereco, telefone, email, senha);
-        this.addPapel("idTutor", idTutor);
-        this.numDeAnimais = numDeAnimais;
+    public Adotante(String nome, String dataDeNascimento, String genero, String cpf,
+                    String endereco, String telefone, String email, String senha,
+                    int idAdotante, String preferenciasDeAdocao, String adocoes, String status) {
+        super(nome, dataDeNascimento, genero, cpf, endereco, telefone, email, senha); // Passa os atributos da Pessoa
+        this.addPapel("Adotante", idAdotante); // Adiciona idAdotante ao mapa de papeis
+        this.preferenciasDeAdocao = preferenciasDeAdocao;
         this.adocoes = adocoes;
         this.status = status;
     }
 
-    public int getNumDeAnimais() {
-        return numDeAnimais;
+    // Getters e Setters para os atributos específicos de Adotante
+    public String getPreferenciasDeAdocao() {
+        return preferenciasDeAdocao;
     }
 
-    public void setNumDeAnimais(int numDeAnimais) {
-        this.numDeAnimais = numDeAnimais;
+    public void setPreferenciasDeAdocao(String preferenciasDeAdocao) {
+        this.preferenciasDeAdocao = preferenciasDeAdocao;
     }
 
     public String getAdocoes() {
@@ -42,7 +42,7 @@ public class Tutor extends Pessoa{
 
     @Override
     public String toString() {
-        return "Tutor{" +
+        return "Adotante{" +
                 "nome='" + getNome() + '\'' +
                 ", dataDeNascimento='" + getDataDeNascimento() + '\'' +
                 ", genero='" + getGenero() + '\'' +
@@ -51,7 +51,7 @@ public class Tutor extends Pessoa{
                 ", telefone='" + getTelefone() + '\'' +
                 ", email='" + getEmail() + '\'' +
                 ", papeis=" + getPapeis() +
-                ", numDeAnimais=" + numDeAnimais +
+                ", preferenciasDeAdocao='" + preferenciasDeAdocao + '\'' +
                 ", adocoes='" + adocoes + '\'' +
                 ", status='" + status + '\'' +
                 '}';

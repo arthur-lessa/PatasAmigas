@@ -1,22 +1,26 @@
-import java.util.Scanner;
-import model;
-import model.Funcionario;
-import model.Pessoa;
+import java.util.*;
+import model.*;
 
 public class Main {
     /*
      * 9.2 Requisitos
-• Configuração inicial do sistema no terminal - SEM PERSISTENCIA DE DADOS.
-• Criação de menus no terminal para cadastro de PESSOAS (tutores, adotantes e funcionários).
-◦ As pessoas podem ser ao mesmo tempo adotantes, tutores(doadores) e/ou funcionarios;
-◦ Não teremos login na primeira entrega, nem níveis de permissão de usuário ainda.
-• Geração de relatórios simples no terminal (ex: listagem de usuários cadastrados).
+     * • Configuração inicial do sistema no terminal - SEM PERSISTENCIA DE DADOS.
+     * • Criação de menus no terminal para cadastro de PESSOAS (tutores, adotantes e funcionários).
+     *  ◦ As pessoas podem ser ao mesmo tempo adotantes, tutores(doadores) e/ou funcionarios;
+     *  ◦ Não teremos login na primeira entrega, nem níveis de permissão de usuário ainda.
+     * • Geração de relatórios simples no terminal (ex: listagem de usuários cadastrados).
      */
 
      //Arthur Augusto, Arthur Silva, Felipe Witkowsky, Henriquy Dias
+
+    public static ArrayList<Pessoa> pessoas = new ArrayList<>();
+
+    public static int idFuncionario = 0;
+    public static int idAdotante = 0;
+    public static int idTutor = 0;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Pessoa pessoa = new Pessoa();
 
         System.out.println("Sistema do PatasAmigas");
 
@@ -34,13 +38,13 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    pessoa = criarPessoa(scanner);
+                    criarPessoa(scanner);
                     break;
                 case 2:
-                    exibirPessoa(pessoa);
+                    exibirPessoa(scanner);
                     break;
                 case 3:
-                    editarPessoa(scanner, pessoa);
+                    editarPessoa(scanner);
                     break;
                 case 4:
                     relatorio();
@@ -53,14 +57,10 @@ public class Main {
                     System.out.println("Opção inválida. Tente novamente.");
             }
         }
-
         scanner.close();
     }
 
-    private static Pessoa criarPessoa(Scanner scanner) {
-        int i = 0;
-        String genero = new String();
-
+    private static void criarPessoa(Scanner scanner) {
         System.out.println("\n--- Criar Nova Pessoa ---");
 
         System.out.print("Nome Completo: ");
@@ -70,27 +70,22 @@ public class Main {
         String dataDeNascimento = scanner.nextLine();
 
         System.out.print("Gênero (digite o número correspondente): ");
-        System.out.println("1 - Homem");
+        System.out.println("\n1 - Homem");
         System.out.println("2 - Mulher");
         System.out.println("3 - Não-binário");
         int generoEscolha = scanner.nextInt();
 
-        switch(generoEscolha) {
-            case 1:
-                genero = "Homem";
-                break;
-            case 2:
-                genero = "Mulher";
-                break;
-            case 3:
-                genero = "Não-binário";
-                break;
-            default:
+        String genero = switch (generoEscolha) {
+            case 1 -> "Homem";
+            case 2 -> "Mulher";
+            case 3 -> "Não-binário";
+            default -> {
                 System.err.println("Você digitou um número inválido.");
-                genero = "Indefinido";
-                break;
-        }
+                yield "Indefinido";
+            }
+        };
 
+        scanner.nextLine();
         System.out.print("CPF: ");
         String cpf = scanner.nextLine();
 
@@ -106,99 +101,231 @@ public class Main {
         System.out.print("Senha: ");
         String senha = scanner.nextLine();
 
-        // Você pode definir o ID da pessoa conforme necessário (ex: auto-incremento ou geração manual)
-        int idPessoa = 1; // Exemplo de ID fixo
+        Pessoa novaPessoa = new Pessoa(nome, dataDeNascimento, genero, cpf,
+                endereco, telefone, email, senha);
 
-        Pessoa pessoaCadastrando = new Pessoa(nome, dataDeNascimento, genero, cpf, endereco, telefone, email, senha);
+        System.out.println("Primeira parte do cadastro feita.");
+        System.out.println(novaPessoa);
 
-        int escolhaTipo = 0;
-        do{
+        boolean cadastrando = true;
+        do {
+            System.out.println("Esta pessoa será um: ");
+            System.out.println("1 - Funcionário");
+            System.out.println("2 - Tutor");
+            System.out.println("3 - Adotante");
+            int escolha = scanner.nextInt();
 
+            // A partir da escolha, verifica: a pessoa registrada já tem um id correspondente com a opção escolhida?
+            switch(escolha){
+                case 1:
+                    idFuncionario++;
+                    System.out.println("Cadastrando Funcionário. ID: " + idFuncionario);
 
-        System.out.println("- Finalizada primeira parte do cadastro. -");
-        System.out.println("Defina qual será o \"tipo\" de pessoa no sistema.");
-        System.out.println("1 - Funcionário");
-        System.out.println("2 - Tutor");
-        System.out.println("3 - Adotante");
-        escolhaTipo = scanner.nextInt();
-        switch (escolhaTipo) {
+                    scanner.nextLine();
+                    System.out.println("Data de Contratação: ");
+                    String dataDeContratacao = scanner.nextLine();
+
+                    System.out.println("Cargo: ");
+                    String cargo = scanner.nextLine();
+
+                    System.out.println("Salário: ");
+                    float salario = scanner.nextFloat();
+
+                    scanner.nextLine();
+                    System.out.println("Departamento: ");
+                    String departamento = scanner.nextLine();
+
+                    Funcionario novoFuncionario = new Funcionario(
+                            novaPessoa.getNome(),
+                            novaPessoa.getDataDeNascimento(),
+                            novaPessoa.getGenero(),
+                            novaPessoa.getCpf(),
+                            novaPessoa.getEndereco(),
+                            novaPessoa.getTelefone(),
+                            novaPessoa.getEmail(),
+                            novaPessoa.getSenha(),
+                            idFuncionario, dataDeContratacao, cargo, salario, departamento
+                    );
+                    pessoas.add(novoFuncionario);
+                    cadastrando = false;
+                    break;
+                case 2:
+                    idTutor++;
+                    System.out.println("Cadastrando Tutor. ID: " + idTutor);
+
+                    System.out.println("Número de Animais sob Custódia: ");
+                    int numDeAnimais = scanner.nextInt();
+
+                    scanner.nextLine();
+                    System.out.println("Histórico de Adoções: ");
+                    String adocoesTutor = scanner.nextLine();
+
+                    System.out.println("Status: ");
+                    String statusTutor = scanner.nextLine();
+
+                    Tutor novoTutor = new Tutor(
+                            novaPessoa.getNome(),
+                            novaPessoa.getDataDeNascimento(),
+                            novaPessoa.getGenero(),
+                            novaPessoa.getCpf(),
+                            novaPessoa.getEndereco(),
+                            novaPessoa.getTelefone(),
+                            novaPessoa.getEmail(),
+                            novaPessoa.getSenha(),
+                            idTutor, numDeAnimais, adocoesTutor, statusTutor
+                    );
+                    pessoas.add(novoTutor);
+                    cadastrando = false;
+                    break;
+                case 3:
+                    idAdotante++;
+                    System.out.println("Cadastrando Adotante. ID: " + idAdotante);
+
+                    System.out.println("Preferências de Adoção: ");
+                    String preferenciasDeAdocao = scanner.nextLine();
+
+                    System.out.println("Histórico de Adoções Realizadas: ");
+                    String adocoesAdotante = scanner.nextLine();
+
+                    System.out.println("Status: ");
+                    String statusAdotante = scanner.nextLine();
+
+                    Adotante novoAdotante = new Adotante(
+                            novaPessoa.getNome(),
+                            novaPessoa.getDataDeNascimento(),
+                            novaPessoa.getGenero(),
+                            novaPessoa.getCpf(),
+                            novaPessoa.getEndereco(),
+                            novaPessoa.getTelefone(),
+                            novaPessoa.getEmail(),
+                            novaPessoa.getSenha(),
+                            idAdotante, preferenciasDeAdocao, adocoesAdotante, statusAdotante
+                    );
+                    pessoas.add(novoAdotante);
+                    cadastrando = false;
+                    break;
+                default:
+                    System.out.println("Por favor, digite um número válido.");
+                    break;
+            }
+            // Deseja adicionar mais algum cargo?
+            // 1 - Sim | 2 - Não
+            // Sim: cadastrando = true
+            // Não: cadastrando = false
+        } while (cadastrando);
+    }
+
+    private static void exibirPessoa(Scanner scanner) {
+        System.out.println("Você deseja obter as informações de que pessoa?");
+        System.out.println("1 - Um Funcionário");
+        System.out.println("2 - Um Tutor");
+        System.out.println("3 - Um Adotante");
+        int opcao = scanner.nextInt();
+
+        int id;
+        boolean achado = false;
+        switch(opcao) {
             case 1:
-            System.out.print("Data de Nascimento: ");
-            String dataDeContratacao = scanner.nextLine();
-
-                Funcionario funcionario = new Funcionario(pessoaCadastrando.getNome()
-                , pessoaCadastrando.getDataDeNascimento(), pessoaCadastrando.getGenero()
-                , pessoaCadastrando.getCpf(), pessoaCadastrando.getEndereco(), 
-                pessoaCadastrando.getTelefone(), pessoaCadastrando.getEmail(), 
-                pessoaCadastrando.getSenha(), dataDeContratacao)
+                System.out.println("Digite o ID do funcionário: ");
+                id = scanner.nextInt();
+                for (Pessoa pessoa : pessoas){
+                    Map<String, Integer> papeisPessoa = pessoa.getPapeis();
+                    if(papeisPessoa.get("idFuncionario") == id) {
+                        System.out.println(pessoa);
+                        achado = true;
+                        break;
+                    }
+                }
+                if(!achado){
+                    System.out.println("Não conseguimos achar este ID. Tente novamente.");
+                }
                 break;
             case 2:
-
-                break;
-            case 3: 
-
-
-                break;
+                System.out.println("Digite o ID do tutor: ");
+                id = scanner.nextInt();
+                for (Pessoa pessoa : pessoas){
+                    Map<String, Integer> papeisPessoa = pessoa.getPapeis();
+                    if(papeisPessoa.get("idTutor") == id) {
+                        System.out.println(pessoa);
+                        achado = true;
+                        break;
+                    }
+                }
+                if(!achado){
+                    System.out.println("Não conseguimos achar este ID. Tente novamente.");
+                }
+            case 3:
+                System.out.println("Digite o ID do adotante: ");
+                id = scanner.nextInt();
+                for (Pessoa pessoa : pessoas){
+                    Map<String, Integer> papeisPessoa = pessoa.getPapeis();
+                    if(papeisPessoa.get("idAdotante") == id) {
+                        System.out.println(pessoa);
+                        achado = true;
+                        break;
+                    }
+                }
+                if(!achado){
+                    System.out.println("Não conseguimos achar este ID. Tente novamente.");
+                }
             default:
+                System.out.println("Digite um número válido.");
                 break;
         }
-        while(escolhaTipo!=1 && escolhaTipo!=2 && escolhaTipo!=3)
-        
-        return novaPessoa;
     }
 
-    private static void exibirPessoa(Pessoa pessoa) {
-        System.out.println("\n--- Informações da Pessoa ---");
-        System.out.println(pessoa.toString());
-    }
-
-    private static void editarPessoa(Scanner scanner, Pessoa pessoa) {
+    private static void editarPessoa(Scanner scanner) {
+        Pessoa pessoa = new Pessoa();
         System.out.println("\n--- Editar Pessoa ---");
 
         System.out.print("Nome (" + pessoa.getNome() + "): ");
         String nome = scanner.nextLine();
         if (!nome.isEmpty()) pessoa.setNome(nome);
 
-        System.out.print("Sobrenome (" + pessoa.getSobrenome() + "): ");
-        String sobrenome = scanner.nextLine();
-        if (!sobrenome.isEmpty()) pessoa.setSobrenome(sobrenome);
+        System.out.print("Data de Nascimento (" + pessoa.getDataDeNascimento() + "): ");
+        String dataDeNascimento = scanner.nextLine();
+        if (!dataDeNascimento.isEmpty()) pessoa.setDataDeNascimento(dataDeNascimento);
+
+        System.out.print("Gênero (" + pessoa.getGenero() + "): ");
+        String genero = scanner.nextLine();
+        if (!genero.isEmpty()) pessoa.setGenero(genero);
+
+        System.out.print("CPF (" + pessoa.getCpf() + "): ");
+        String cpf = scanner.nextLine();
+        if (!cpf.isEmpty()) pessoa.setCpf(cpf);
+
+        System.out.print("Endereço (" + pessoa.getEndereco() + "): ");
+        String endereco = scanner.nextLine();
+        if (!endereco.isEmpty()) pessoa.setEndereco(endereco);
+
+        System.out.print("Telefone (" + pessoa.getTelefone() + "): ");
+        String telefone = scanner.nextLine();
+        if (!telefone.isEmpty()) pessoa.setTelefone(telefone);
 
         System.out.print("Email (" + pessoa.getEmail() + "): ");
         String email = scanner.nextLine();
         if (!email.isEmpty()) pessoa.setEmail(email);
 
-        System.out.print("Logradouro (" + pessoa.getLogradouro() + "): ");
-        String logradouro = scanner.nextLine();
-        if (!logradouro.isEmpty()) pessoa.setLogradouro(logradouro);
+        System.out.print("Senha (" + pessoa.getSenha() + "): ");
+        String senha = scanner.nextLine();
+        if (!senha.isEmpty()) pessoa.setSenha(senha);
 
-        System.out.print("Número (" + pessoa.getNumero() + "): ");
-        String numero = scanner.nextLine();
-        if (!numero.isEmpty()) pessoa.setNumero(numero);
-
-        System.out.print("Bairro (" + pessoa.getBairro() + "): ");
-        String bairro = scanner.nextLine();
-        if (!bairro.isEmpty()) pessoa.setBairro(bairro);
-
-        System.out.print("Cidade (" + pessoa.getCidade() + "): ");
-        String cidade = scanner.nextLine();
-        if (!cidade.isEmpty()) pessoa.setCidade(cidade);
-
-        System.out.print("Estado (" + pessoa.getEstado() + "): ");
-        String estado = scanner.nextLine();
-        if (!estado.isEmpty()) pessoa.setEstado(estado);
-
-        System.out.print("País (" + pessoa.getPais() + "): ");
-        String pais = scanner.nextLine();
-        if (!pais.isEmpty()) pessoa.setPais(pais);
-
-        System.out.print("Nacionalidade (" + pessoa.getNacionalidade() + "): ");
-        String nacionalidade = scanner.nextLine();
-        if (!nacionalidade.isEmpty()) pessoa.setNacionalidade(nacionalidade);
+        /*
+        // Verifica os ids que a pessoa tem
+        Gostaria de atualizar os atributos de + cargo + desta pessoa?
+        Sim | Não
+        Chamada de funções com if/else para atualizar cada atributo dos outros cargos
+         */
 
         System.out.println("Informações da pessoa atualizadas com sucesso!");
     }
 
     private static void relatorio(){
-        // For para listar as pessoas cadastradas
+        int i = 1;
+        for (Pessoa pessoa: pessoas) {
+            System.out.println(i + "º Pessoa: ");
+            System.out.println(pessoa.toString());
+            i++;
+        }
     }
 }

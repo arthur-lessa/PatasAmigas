@@ -1,5 +1,6 @@
 package model;
-import java.util.Date;
+//import java.util.Date;
+import java.util.*;
 
 public class Pessoa  {
     private String nome;
@@ -10,6 +11,7 @@ public class Pessoa  {
     private String telefone;
     private String email;
     private String senha; //usar um tipo de hashing
+    private Map<String, Integer> papeis; // key, value
 
     public Pessoa(){}
 
@@ -22,6 +24,7 @@ public class Pessoa  {
         this.telefone = telefone;
         this.email = email;
         this.senha = senha;
+        this.papeis = new HashMap<String, Integer>();
     }
 
     public String getNome() {
@@ -32,24 +35,11 @@ public class Pessoa  {
         this.nome = nome;
     }
 
-    public String getTelefone() {
-        return telefone;
-    }   
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getEmail() {
-        return email;
-    }   
-
-
-    public Date getDataDeNascimento() {
+    public String getDataDeNascimento() {
         return dataDeNascimento;
     }
 
-    public void setDataDeNascimento(Date dataDeNascimento) {
+    public void setDataDeNascimento(String dataDeNascimento) {
         this.dataDeNascimento = dataDeNascimento;
     }
 
@@ -75,7 +65,19 @@ public class Pessoa  {
 
     public void setEndereco(String endereco) {
         this.endereco = endereco;
-     }
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 
     public void setEmail(String email) {
         this.email = email;
@@ -87,6 +89,18 @@ public class Pessoa  {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public Map<String, Integer> getPapeis() {
+        return papeis;
+    }
+
+    public void setPapeis(Map<String, Integer> papeis) {
+        this.papeis = papeis;
+    }
+
+    public void addPapel(String papel, int id){
+        this.papeis.put(papel, id);
     }
 
     public Boolean validarSenha(){
@@ -122,5 +136,20 @@ public class Pessoa  {
             semUltimosDois += resto[i];
         }
         return resto[0] == (cpf.charAt(9) - '0') && resto[1] == (cpf.charAt(10) - '0');
+    }
+
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "nome='" + nome + '\'' +
+                ", dataDeNascimento='" + dataDeNascimento + '\'' +
+                ", genero='" + genero + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", papeis=" + papeis +
+                '}';
     }
 }
