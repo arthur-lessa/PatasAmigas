@@ -5,11 +5,13 @@ public class Adotante extends Pessoa {
     private String adocoes;
     private String status;
 
+    public Adotante(){}
+
     public Adotante(String nome, String dataDeNascimento, String genero, String cpf,
                     String endereco, String telefone, String email, String senha,
                     int idAdotante, String preferenciasDeAdocao, String adocoes, String status) {
         super(nome, dataDeNascimento, genero, cpf, endereco, telefone, email, senha); // Passa os atributos da Pessoa
-        this.addPapel("Adotante", idAdotante); // Adiciona idAdotante ao mapa de papeis
+        this.addPapel("idAdotante", idAdotante); // Adiciona idAdotante ao mapa de papeis
         this.preferenciasDeAdocao = preferenciasDeAdocao;
         this.adocoes = adocoes;
         this.status = status;
@@ -56,4 +58,6 @@ public class Adotante extends Pessoa {
                 ", status='" + status + '\'' +
                 '}';
     }
+
+
 }

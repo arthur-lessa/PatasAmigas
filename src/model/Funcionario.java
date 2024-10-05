@@ -7,6 +7,8 @@ public class Funcionario extends Pessoa {
     private float salario;
     private String departamento;
 
+    public Funcionario(){}
+
     public Funcionario(String nome, String dataDeNascimento, String genero, String cpf,
                        String endereco, String telefone, String email, String senha,
                        int idFuncionario, String dataContratacao, String cargo, float salario,

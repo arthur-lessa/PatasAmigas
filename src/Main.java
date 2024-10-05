@@ -14,6 +14,9 @@ public class Main {
      //Arthur Augusto, Arthur Silva, Felipe Witkowsky, Henriquy Dias
 
     public static ArrayList<Pessoa> pessoas = new ArrayList<>();
+    public static ArrayList<Funcionario> funcionarios = new ArrayList<Funcionario>();
+    public static ArrayList<Tutor> tutores = new ArrayList<>();
+    public static ArrayList<Adotante> adotantes = new ArrayList<>();
 
     public static int idFuncionario = 0;
     public static int idAdotante = 0;
@@ -30,7 +33,7 @@ public class Main {
             System.out.println("1. Cadastrar nova pessoa");
             System.out.println("2. Exibir informações de uma pessoa");
             System.out.println("3. Editar informações de uma pessoa");
-            System.out.println("4. Relatório das pessoas cadastradas");
+            System.out.println("4. Relatórios");
             System.out.println("5. Sair");
 
             int choice = scanner.nextInt();
@@ -47,7 +50,7 @@ public class Main {
                     editarPessoa(scanner);
                     break;
                 case 4:
-                    relatorio();
+                    relatorio(scanner);
                     break;
                 case 5:
                     running = false;
@@ -108,6 +111,7 @@ public class Main {
         System.out.println(novaPessoa);
 
         boolean cadastrando = true;
+        int escolhaContinuar;
         do {
             System.out.println("Esta pessoa será um: ");
             System.out.println("1 - Funcionário");
@@ -116,8 +120,14 @@ public class Main {
             int escolha = scanner.nextInt();
 
             // A partir da escolha, verifica: a pessoa registrada já tem um id correspondente com a opção escolhida?
+            Map<String, Integer> papeisPessoa = novaPessoa.getPapeis();
+            System.out.println(novaPessoa);
             switch(escolha){
                 case 1:
+                    if(papeisPessoa.containsKey("idFuncionario")){
+                        System.out.println("Essa pessoa já está cadastrada como Funcionário!");
+                        break;
+                    }
                     idFuncionario++;
                     System.out.println("Cadastrando Funcionário. ID: " + idFuncionario);
 
@@ -146,10 +156,15 @@ public class Main {
                             novaPessoa.getSenha(),
                             idFuncionario, dataDeContratacao, cargo, salario, departamento
                     );
-                    pessoas.add(novoFuncionario);
+                    funcionarios.add(novoFuncionario);
+                    novaPessoa.addPapel("idFuncionario", idFuncionario);
                     cadastrando = false;
                     break;
                 case 2:
+                    if(papeisPessoa.containsKey("idTutor")){
+                        System.out.println("Essa pessoa já está cadastrada como Tutor!");
+                        break;
+                    }
                     idTutor++;
                     System.out.println("Cadastrando Tutor. ID: " + idTutor);
 
@@ -174,13 +189,19 @@ public class Main {
                             novaPessoa.getSenha(),
                             idTutor, numDeAnimais, adocoesTutor, statusTutor
                     );
-                    pessoas.add(novoTutor);
+                    tutores.add(novoTutor);
+                    novaPessoa.addPapel("idTutor", idTutor);
                     cadastrando = false;
                     break;
                 case 3:
+                    if(papeisPessoa.containsKey("idAdotante")){
+                        System.out.println("Essa pessoa já está cadastrada como Adotante!");
+                        break;
+                    }
                     idAdotante++;
                     System.out.println("Cadastrando Adotante. ID: " + idAdotante);
 
+                    scanner.nextLine();
                     System.out.println("Preferências de Adoção: ");
                     String preferenciasDeAdocao = scanner.nextLine();
 
@@ -201,83 +222,235 @@ public class Main {
                             novaPessoa.getSenha(),
                             idAdotante, preferenciasDeAdocao, adocoesAdotante, statusAdotante
                     );
-                    pessoas.add(novoAdotante);
+                    adotantes.add(novoAdotante);
+                    novaPessoa.addPapel("idAdotante", idAdotante);
                     cadastrando = false;
                     break;
                 default:
-                    System.out.println("Por favor, digite um número válido.");
+                    System.err.println("Por favor, digite um número válido.");
                     break;
             }
-            // Deseja adicionar mais algum cargo?
-            // 1 - Sim | 2 - Não
-            // Sim: cadastrando = true
-            // Não: cadastrando = false
+            do {
+                System.out.println("Deseja adicionar mais algum cargo?");
+                System.out.println("1 - Sim | 2 - Não");
+                escolhaContinuar = scanner.nextInt();
+                if(escolhaContinuar == 1){
+                    System.out.println("\n");
+                    cadastrando = true;
+                } else if(escolhaContinuar == 2){
+                    cadastrando = false;
+                } else {
+                    System.out.println("Digite uma opção válida.");
+                }
+            } while (escolhaContinuar != 1 && escolhaContinuar != 2);
         } while (cadastrando);
+        pessoas.add(novaPessoa);
     }
 
     private static void exibirPessoa(Scanner scanner) {
-        System.out.println("Você deseja obter as informações de que pessoa?");
-        System.out.println("1 - Um Funcionário");
-        System.out.println("2 - Um Tutor");
-        System.out.println("3 - Um Adotante");
-        int opcao = scanner.nextInt();
-
-        int id;
+        int id, escolha;
         boolean achado = false;
-        switch(opcao) {
-            case 1:
-                System.out.println("Digite o ID do funcionário: ");
-                id = scanner.nextInt();
-                for (Pessoa pessoa : pessoas){
-                    Map<String, Integer> papeisPessoa = pessoa.getPapeis();
-                    if(papeisPessoa.get("idFuncionario") == id) {
-                        System.out.println(pessoa);
-                        achado = true;
-                        break;
+        do {
+            System.out.println("Você deseja obter as informações de que pessoa?");
+            System.out.println("1 - Um Funcionário");
+            System.out.println("2 - Um Tutor");
+            System.out.println("3 - Um Adotante");
+            int opcao = scanner.nextInt();
+
+            switch(opcao) {
+                case 1:
+                    System.out.println("Digite o ID do funcionário: ");
+                    id = scanner.nextInt();
+                    for (Pessoa pessoa : funcionarios){
+                        if(pessoa.containsKey("idFuncionario")){
+                            if(pessoa.pegaValor("idFuncionario") == id) {
+                                System.out.println(pessoa);
+                                achado = true;
+                                break;
+                            }
+                        }
                     }
-                }
-                if(!achado){
-                    System.out.println("Não conseguimos achar este ID. Tente novamente.");
-                }
-                break;
-            case 2:
-                System.out.println("Digite o ID do tutor: ");
-                id = scanner.nextInt();
-                for (Pessoa pessoa : pessoas){
-                    Map<String, Integer> papeisPessoa = pessoa.getPapeis();
-                    if(papeisPessoa.get("idTutor") == id) {
-                        System.out.println(pessoa);
-                        achado = true;
-                        break;
+                    break;
+                case 2:
+                    System.out.println("Digite o ID do tutor: ");
+                    id = scanner.nextInt();
+                    for (Pessoa pessoa : tutores){
+                        if(pessoa.containsKey("idTutor")){
+                            if(pessoa.pegaValor("idTutor") == id) {
+                                System.out.println(pessoa);
+                                achado = true;
+                                break;
+                            }
+                        }
                     }
-                }
-                if(!achado){
-                    System.out.println("Não conseguimos achar este ID. Tente novamente.");
-                }
-            case 3:
-                System.out.println("Digite o ID do adotante: ");
-                id = scanner.nextInt();
-                for (Pessoa pessoa : pessoas){
-                    Map<String, Integer> papeisPessoa = pessoa.getPapeis();
-                    if(papeisPessoa.get("idAdotante") == id) {
-                        System.out.println(pessoa);
-                        achado = true;
-                        break;
+                    break;
+                case 3:
+                    System.out.println("Digite o ID do adotante: ");
+                    id = scanner.nextInt();
+                    for (Pessoa pessoa : adotantes){
+                        if(pessoa.containsKey("idAdotante")){
+                            if(pessoa.pegaValor("idAdotante") == id) {
+                                System.out.println(pessoa);
+                                achado = true;
+                                break;
+                            }
+                        }
                     }
-                }
-                if(!achado){
-                    System.out.println("Não conseguimos achar este ID. Tente novamente.");
-                }
-            default:
-                System.out.println("Digite um número válido.");
-                break;
-        }
+                    break;
+                default:
+                    System.out.println("Digite um número válido.");
+                    break;
+            }
+            if(!achado){
+                do {
+                    System.err.println("Não conseguimos achar este ID.");
+                    System.out.println("Deseja tentar novamente? \n1 - Sim | 2 - Não");
+                    escolha = scanner.nextInt();
+                    if(escolha == 2) {
+                        achado = true;
+                    } else if(escolha == 1){
+                        System.out.println("\n");
+                    } else {
+                        System.err.println("Digite uma opção válida.");
+                    }
+                } while(escolha != 1 && escolha != 2);
+            }
+        } while(!achado);
     }
 
     private static void editarPessoa(Scanner scanner) {
-        Pessoa pessoa = new Pessoa();
+        int opcaoEscolhida = 0;
+        int idDaPessoa;
+        boolean rodando = true;
+        boolean ehFuncionario = false;
+        boolean ehTutor = false;
+        boolean ehAdotante = false;
+        Pessoa pessoaEditando = null;
         System.out.println("\n--- Editar Pessoa ---");
 
+        while(rodando) {
+            System.out.println("Você gostaria de editar que pessoa?");
+            System.out.println("1 - Funcionário");
+            System.out.println("2 - Tutor");
+            System.out.println("3 - Adotante");
+            opcaoEscolhida = scanner.nextInt();
+            if(opcaoEscolhida != 1 && opcaoEscolhida != 2 && opcaoEscolhida != 3 && opcaoEscolhida != 4){
+                System.out.println("Opção inválida!");
+            } else {
+                rodando = false;
+            }
+        }
+
+        if(opcaoEscolhida == 1){
+            System.out.println("Digite o ID do Funcionário: ");
+            idDaPessoa = scanner.nextInt();
+            for (Pessoa pessoa : funcionarios){
+                if(pessoa.containsKey("idFuncionario")){
+                    if(pessoa.pegaValor("idFuncionario") == idDaPessoa){
+                        System.out.println("Funcionário identificado.");
+                        System.out.println(pessoa);
+                        editarDadosBasicosPessoa(scanner, pessoa);
+                        pessoaEditando = pessoa;
+                        ehFuncionario = true;
+                    }
+                }
+            }
+        } else if(opcaoEscolhida == 2){
+            System.out.println("Digite o ID do Tutor: ");
+            idDaPessoa = scanner.nextInt();
+            for (Pessoa pessoa : tutores){
+                if(pessoa.containsKey("idTutor")){
+                    if(pessoa.pegaValor("idTutor") == idDaPessoa){
+                        System.out.println("Tutor identificado.");
+                        System.out.println(pessoa);
+                        editarDadosBasicosPessoa(scanner, pessoa);
+                        pessoaEditando = pessoa;
+                        ehTutor = true;
+                    }
+                }
+            }
+        } else {
+            System.out.println("Digite o ID do Adotante: ");
+            idDaPessoa = scanner.nextInt();
+            for (Pessoa pessoa : adotantes){
+                if(pessoa.containsKey("idAdotante")){
+                    if(pessoa.pegaValor("idAdotante") == idDaPessoa){
+                        System.out.println("Adotante identificado.");
+                        System.out.println(pessoa);
+                        editarDadosBasicosPessoa(scanner, pessoa);
+                        pessoaEditando = pessoa;
+                        ehAdotante = true;
+                    }
+                }
+            }
+        }
+
+        if(ehFuncionario){
+            System.out.println("\n- Edite os atributos específicos de funcionário -");
+
+            Funcionario funcionario = (Funcionario) pessoaEditando;
+
+            System.out.println("Data de Contratação (" + funcionario.getDataContratacao() + "): ");
+            String dataDeContratacao = scanner.nextLine();
+            if (!dataDeContratacao.isEmpty()) funcionario.setDataContratacao(dataDeContratacao);
+
+            System.out.println("Cargo (" + funcionario.getCargo() + "): ");
+            String cargo = scanner.nextLine();
+            if(!cargo.isEmpty()) funcionario.setCargo(cargo);
+
+            System.out.println("Salário: (" + funcionario.getSalario() + "): ");
+            float salario = scanner.nextFloat();
+            if(salario > 0) funcionario.setSalario(salario);
+
+            scanner.nextLine();
+            System.out.println("Departamento: (" + funcionario.getDepartamento() + "): ");
+            String departamento = scanner.nextLine();
+        if(!departamento.isEmpty()) funcionario.setDepartamento(departamento);
+        }
+
+        if(ehTutor){
+            System.out.println("\n- Editar atributos específicos de tutor -");
+
+            Tutor tutor = (Tutor) pessoaEditando;
+
+            System.out.println("Número de Animais (" + tutor.getNumDeAnimais() + "): ");
+            int numDeAnimais = scanner.nextInt();
+            if(numDeAnimais > 0) tutor.setNumDeAnimais(numDeAnimais);
+
+            scanner.nextLine();
+            System.out.println("Adoções (" + tutor.getAdocoes() + "): ");
+            String adocoes = scanner.nextLine();
+            if(!adocoes.isEmpty()) tutor.setAdocoes(adocoes);
+
+            System.out.println("Status (" + tutor.getStatus() + "): ");
+            String status = scanner.nextLine();
+            if(!status.isEmpty()) tutor.setStatus(status);
+        }
+
+        if(ehAdotante){
+            System.out.println("\n- Editar atributos específicos de adotante -");
+
+            Adotante adotante = (Adotante) pessoaEditando;
+
+            System.out.println("Preferências de Adoção (" + adotante.getPreferenciasDeAdocao() + "): ");
+            String preferenciasDeAdocao = scanner.nextLine();
+            if(!preferenciasDeAdocao.isEmpty()) adotante.setPreferenciasDeAdocao(preferenciasDeAdocao);
+
+            System.out.println("Adoções (" + adotante.getAdocoes() + "): ");
+            String adocoes = scanner.nextLine();
+            if(!adocoes.isEmpty()) adotante.setAdocoes(adocoes);
+
+            System.out.println("Status (" + adotante.getStatus() + "): ");
+            String status = scanner.nextLine();
+            if(!status.isEmpty()) adotante.setStatus(status);
+        }
+
+        System.out.println("Informações da pessoa atualizadas com sucesso!");
+        System.out.println(pessoaEditando);
+    }
+
+    private static void editarDadosBasicosPessoa(Scanner scanner, Pessoa pessoa){
+        scanner.nextLine();
         System.out.print("Nome (" + pessoa.getNome() + "): ");
         String nome = scanner.nextLine();
         if (!nome.isEmpty()) pessoa.setNome(nome);
@@ -309,23 +482,48 @@ public class Main {
         System.out.print("Senha (" + pessoa.getSenha() + "): ");
         String senha = scanner.nextLine();
         if (!senha.isEmpty()) pessoa.setSenha(senha);
-
-        /*
-        // Verifica os ids que a pessoa tem
-        Gostaria de atualizar os atributos de + cargo + desta pessoa?
-        Sim | Não
-        Chamada de funções com if/else para atualizar cada atributo dos outros cargos
-         */
-
-        System.out.println("Informações da pessoa atualizadas com sucesso!");
     }
 
-    private static void relatorio(){
-        int i = 1;
-        for (Pessoa pessoa: pessoas) {
-            System.out.println(i + "º Pessoa: ");
-            System.out.println(pessoa.toString());
-            i++;
+    private static void relatorio(Scanner scanner){
+        boolean opcaoEscolhidaValida = false;
+        if(pessoas.isEmpty()){
+            System.err.println("\nAinda não há pessoas registradas no sistema.");
+            opcaoEscolhidaValida = true;
+        }
+        while(!opcaoEscolhidaValida) {
+            System.out.println("Qual relatório você deseja?");
+            System.out.println("1 - Pessoas Registradas");
+            System.out.println("2 - Lista de Funcionários");
+            System.out.println("3 - Lista de Tutores");
+            System.out.println("4 - Lista de Adotantes");
+            System.out.println("5 - Sair");
+
+            int relatorioDesejado = scanner.nextInt();
+            if(relatorioDesejado == 1){
+                for(Pessoa pessoa : pessoas){
+                    System.out.println(pessoa);
+                    opcaoEscolhidaValida = true;
+                }
+            } else if(relatorioDesejado == 2){
+                for(Pessoa pessoa : funcionarios){
+                    System.out.println(pessoa);
+                    opcaoEscolhidaValida = true;
+                }
+            } else if(relatorioDesejado == 3){
+                for(Pessoa pessoa : tutores){
+                    System.out.println(pessoa);
+                    opcaoEscolhidaValida = true;
+                }
+            } else if(relatorioDesejado == 4){
+                for(Pessoa pessoa : adotantes){
+                    System.out.println(pessoa);
+                    opcaoEscolhidaValida = true;
+                }
+            } else if(relatorioDesejado == 5){
+                opcaoEscolhidaValida = true;
+            } else {
+                System.err.println("Opção inválida!");
+            }
         }
     }
 }

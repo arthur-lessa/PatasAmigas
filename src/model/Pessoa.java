@@ -2,7 +2,7 @@ package model;
 //import java.util.Date;
 import java.util.*;
 
-public class Pessoa  {
+public class Pessoa {
     private String nome;
     private String dataDeNascimento;
     private String genero;
@@ -24,7 +24,7 @@ public class Pessoa  {
         this.telefone = telefone;
         this.email = email;
         this.senha = senha;
-        this.papeis = new HashMap<String, Integer>();
+        this.papeis = new HashMap<>();
     }
 
     public String getNome() {
@@ -101,6 +101,14 @@ public class Pessoa  {
 
     public void addPapel(String papel, int id){
         this.papeis.put(papel, id);
+    }
+
+    public boolean containsKey(String key){
+        return this.papeis.containsKey(key);
+    }
+
+    public int pegaValor(String key){
+        return this.papeis.get(key);
     }
 
     public Boolean validarSenha(){

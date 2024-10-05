@@ -6,6 +6,8 @@ public class Tutor extends Pessoa{
     private String adocoes;
     private String status;
 
+    public Tutor(){}
+
     public Tutor(String nome, String dataDeNascimento, String genero, String cpf,
                  String endereco, String telefone, String email, String senha,
                  int idTutor, int numDeAnimais, String adocoes, String status) {
