@@ -14,6 +14,7 @@ public class Main {
     /*
      * TODO:
      * organizar classes separadas para Pessoa, Funcionário, Tutor e Adotante
+     * ajustar no método editarDadosBasicosPessoa o gênero para opções numéricas
      */
 
     //Arthur Augusto, Arthur Silva, Felipe Witkowsky, Henriquy Dias
@@ -594,7 +595,7 @@ public class Main {
     essas que toda Pessoa, seja ela funcionário, tutor ou adotante terá, como CPF,
     gênero, email, senha... */
     private static void editarDadosBasicosPessoa(Scanner scanner, Pessoa pessoa){
-        // scanner.nextLine();
+        scanner.nextLine();
         // Permitindo a alteração do nome da pessoa.
         System.out.print("Nome (" + pessoa.getNome() + "): ");
         String nome = scanner.nextLine();
