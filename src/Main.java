@@ -11,13 +11,22 @@ public class Main {
      * • Geração de relatórios simples no terminal (ex: listagem de usuários cadastrados).
      */
 
-     //Arthur Augusto, Arthur Silva, Felipe Witkowsky, Henriquy Dias
+    /*
+     * TODO:
+     * organizar classes separadas para Pessoa, Funcionário, Tutor e Adotante
+     */
 
+    //Arthur Augusto, Arthur Silva, Felipe Witkowsky, Henriquy Dias
+
+    /* Criação de ArrasyLists correspondentes a cada entidade que irá 
+    participar do processo de adoção */
     public static ArrayList<Pessoa> pessoas = new ArrayList<>();
     public static ArrayList<Funcionario> funcionarios = new ArrayList<Funcionario>();
     public static ArrayList<Tutor> tutores = new ArrayList<>();
     public static ArrayList<Adotante> adotantes = new ArrayList<>();
 
+    // Atribuindo às entidades um id para que possam ser 
+    //localizadas e identificadas com maior facilidade
     public static int idFuncionario = 0;
     public static int idAdotante = 0;
     public static int idTutor = 0;
@@ -25,8 +34,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        /* Inicializando o sistema e mostrando as opções para o usuário: */
         System.out.println("Sistema do PatasAmigas");
-
         boolean running = true;
         while (running) {
             System.out.println("\nEscolha uma opção:");
@@ -36,6 +45,11 @@ public class Main {
             System.out.println("4. Relatórios");
             System.out.println("5. Sair");
 
+            /* De acordo com a escolha do usuário, será realizada
+            a ação correspondente ao descrito no menu de inicialização,
+            e caso a escolha numérica do usuário não entre nas opções
+            abordadas na inicialização, é sugerido ao usuário que 
+            tente novamente. */
             int choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -63,9 +77,12 @@ public class Main {
         scanner.close();
     }
 
+    // Método utilizado para criar um usuário do tipo Pessoa
     private static void criarPessoa(Scanner scanner) {
+        // Inicializando o menu de criar nova Pessoa:
         System.out.println("\n--- Criar Nova Pessoa ---");
 
+        // Obtendo informações importantes da pessoa cadastrada:
         System.out.print("Nome Completo: ");
         String nome = scanner.nextLine();
 
@@ -78,6 +95,10 @@ public class Main {
         System.out.println("3 - Não-binário");
         int generoEscolha = scanner.nextInt();
 
+        /* Tratamento de opções para a escolha de gênero
+        feita pelo usuário, que caso o usuário selecione um 
+        número além dos parametrizados, é retornada uma mensagem
+        de erro.*/
         String genero = switch (generoEscolha) {
             case 1 -> "Homem";
             case 2 -> "Mulher";
@@ -88,6 +109,7 @@ public class Main {
             }
         };
 
+        // Ainda obtendo mais informações da pessoa cadastrada:
         scanner.nextLine();
         System.out.print("CPF: ");
         String cpf = scanner.nextLine();
@@ -98,21 +120,27 @@ public class Main {
         System.out.print("Telefone: ");
         String telefone = scanner.nextLine();
 
+        /* Obtendo um e-mail e uma senha para facilitar 
+        o login da pessoa cadastrada.*/
         System.out.print("Email: ");
         String email = scanner.nextLine();
 
         System.out.print("Senha: ");
         String senha = scanner.nextLine();
 
+        // Criando a nova pessoa com as informações obtidas.
         Pessoa novaPessoa = new Pessoa(nome, dataDeNascimento, genero, cpf,
                 endereco, telefone, email, senha);
 
         System.out.println("Primeira parte do cadastro feita.");
         System.out.println(novaPessoa);
 
+        // Configurando qual será o tipo ou ocupação da pessoa cadastrada.:
         boolean cadastrando = true;
         int escolhaContinuar;
+        // Enqunto cadastrando = true, irá executar essas ações:
         do {
+            // Inicializando o menu de cadastro de pessoas
             System.out.println("Esta pessoa será um: ");
             System.out.println("1 - Funcionário");
             System.out.println("2 - Tutor");
@@ -123,7 +151,12 @@ public class Main {
             Map<String, Integer> papeisPessoa = novaPessoa.getPapeis();
             System.out.println(novaPessoa);
             switch(escolha){
+                // Inicializando o case de funcionário:
                 case 1:
+                    /* Caso o funcionário não possua um id correspondente com a opção escolhida,
+                    é criado um novo id para ele, implementando apenas o id anterior. Caso o mesmo 
+                    já exista, é retornada uma mensagem de funcionário já existente, e o case
+                    de funcionário é encerrado. */
                     if(papeisPessoa.containsKey("idFuncionario")){
                         System.out.println("Essa pessoa já está cadastrada como Funcionário!");
                         break;
@@ -131,6 +164,7 @@ public class Main {
                     idFuncionario++;
                     System.out.println("Cadastrando Funcionário. ID: " + idFuncionario);
 
+                    // Obtendo as informações do funcionário:
                     scanner.nextLine();
                     System.out.println("Data de Contratação: ");
                     String dataDeContratacao = scanner.nextLine();
@@ -145,6 +179,8 @@ public class Main {
                     System.out.println("Departamento: ");
                     String departamento = scanner.nextLine();
 
+                    /*  Atribuindo ao funcionário os campos/informações necessários para 
+                    a finalização de seu cadastro. */
                     Funcionario novoFuncionario = new Funcionario(
                             novaPessoa.getNome(),
                             novaPessoa.getDataDeNascimento(),
@@ -156,11 +192,18 @@ public class Main {
                             novaPessoa.getSenha(),
                             idFuncionario, dataDeContratacao, cargo, salario, departamento
                     );
+                    /* Adicionando um novo funcionário à lista de funcionários, e um
+                    novo cargo/papel à nova pessoa criada (funcionário). */       
                     funcionarios.add(novoFuncionario);
                     novaPessoa.addPapel("idFuncionario", idFuncionario);
+                    // Encerrando o case de funcionário.
                     cadastrando = false;
                     break;
+                // Inicializando o case de tutor:    
                 case 2:
+                    /* Assim como em funcionários, caso já exista um tutor 
+                    verificado pelo seu id, o case de tutores é quebrado,
+                    caso contrário, dá-se procedimento à criação do novo tutor. */ 
                     if(papeisPessoa.containsKey("idTutor")){
                         System.out.println("Essa pessoa já está cadastrada como Tutor!");
                         break;
@@ -168,6 +211,7 @@ public class Main {
                     idTutor++;
                     System.out.println("Cadastrando Tutor. ID: " + idTutor);
 
+                    // Obtendo as informações necessárias para o cadastro do tutor:
                     System.out.println("Número de Animais sob Custódia: ");
                     int numDeAnimais = scanner.nextInt();
 
@@ -178,6 +222,8 @@ public class Main {
                     System.out.println("Status: ");
                     String statusTutor = scanner.nextLine();
 
+                    /*  Atribuindo ao tutor os campos/informações necessários para 
+                    a finalização de seu cadastro. */
                     Tutor novoTutor = new Tutor(
                             novaPessoa.getNome(),
                             novaPessoa.getDataDeNascimento(),
@@ -189,11 +235,19 @@ public class Main {
                             novaPessoa.getSenha(),
                             idTutor, numDeAnimais, adocoesTutor, statusTutor
                     );
+                    /* Adicionando um novo tutor à lista de tutores, e um
+                    novo cargo/papel à nova pessoa criada (tutor). */  
                     tutores.add(novoTutor);
                     novaPessoa.addPapel("idTutor", idTutor);
+                    // Encerrando o case de tutores.
                     cadastrando = false;
                     break;
+                // Inicializando case de adotantes:
                 case 3:
+                    /* Assim como em funcionários e tutores, realiza-se a 
+                    verificação se o id do adotante já existe, e caso positivo, 
+                    o case de adotantes é quebrado. Caso contrário, é cadastrado 
+                    um novo adotante incrementando apenas o id anterior. */
                     if(papeisPessoa.containsKey("idAdotante")){
                         System.out.println("Essa pessoa já está cadastrada como Adotante!");
                         break;
@@ -202,6 +256,7 @@ public class Main {
                     System.out.println("Cadastrando Adotante. ID: " + idAdotante);
 
                     scanner.nextLine();
+                    // Obtendo as informações necessárias para o cadastro do adotante:
                     System.out.println("Preferências de Adoção: ");
                     String preferenciasDeAdocao = scanner.nextLine();
 
@@ -211,6 +266,8 @@ public class Main {
                     System.out.println("Status: ");
                     String statusAdotante = scanner.nextLine();
 
+                    /*  Atribuindo ao adotante os campos/informações necessários para 
+                    a finalização de seu cadastro. */
                     Adotante novoAdotante = new Adotante(
                             novaPessoa.getNome(),
                             novaPessoa.getDataDeNascimento(),
@@ -222,14 +279,24 @@ public class Main {
                             novaPessoa.getSenha(),
                             idAdotante, preferenciasDeAdocao, adocoesAdotante, statusAdotante
                     );
+                    /* Adicionando um novo adotante à lista de adotantes, e um
+                    novo cargo/papel à nova pessoa criada (adotante). */  
                     adotantes.add(novoAdotante);
                     novaPessoa.addPapel("idAdotante", idAdotante);
+                    // Encerrando o case de adotantes.
                     cadastrando = false;
                     break;
+                /* Inicializando e tratando a verificação da seleção de uma
+                opção inválida ou inexistente. */ 
                 default:
                     System.err.println("Por favor, digite um número válido.");
                     break;
             }
+            /* Enquanto escolhaContinuar = 1, o valor de cadastrando se torna
+            true, e o ciclo de cadastro de nova Pessoa se inicia novamente. 
+            Caso escolhaContinuar seja igual a 2, o valor de cadastrando se torna
+            false e o ciclo é encerrado. Caso nenhuma opção seja selecionada, é pedido 
+            ao usuário que digite uma opção válida para a verificação atual.*/ 
             do {
                 System.out.println("Deseja adicionar mais algum cargo?");
                 System.out.println("1 - Sim | 2 - Não");
@@ -247,16 +314,23 @@ public class Main {
         pessoas.add(novaPessoa);
     }
 
+    // Método para exibir as informações de uma pessoa selecionada pelo usuário.
     private static void exibirPessoa(Scanner scanner) {
         int id, escolha;
         boolean achado = false;
+        // Enquanto achado for false, são executadas essas ações:
         do {
+            // Inicializando o menu de obtenção de informações de uma pessoa:
             System.out.println("Você deseja obter as informações de que pessoa?");
             System.out.println("1 - Um Funcionário");
             System.out.println("2 - Um Tutor");
             System.out.println("3 - Um Adotante");
             int opcao = scanner.nextInt();
 
+            /* De acordo com a opção selecionada, o usuário digitará o id do
+            papel/cargo da pessoa correspondente à opção (Ex: idAdotante ou idTutor),
+            e então as informações da pessoa selecionada serão exibidas, e o valor
+            de "achado" será alterado para true.*/
             switch(opcao) {
                 case 1:
                     System.out.println("Digite o ID do funcionário: ");
@@ -297,13 +371,24 @@ public class Main {
                         }
                     }
                     break;
+                /* Realizando o tratamento de caso o usuário selecione uma opção
+                inválida ou inexistente. */ 
                 default:
                     System.out.println("Digite um número válido.");
                     break;
             }
-            if(!achado){
+            /* Caso achado = false, ou seja, a pessoa procurada pelo usuário não 
+            foi encontrada, é retornada uma mensagem de erro apontando que não foi 
+            possível encontrá-la, e é oferecida ao usuário a possibilidade de tentar
+            buscar novamente a pessoa.*/
+            if(!achado){                
                 do {
                     System.err.println("Não conseguimos achar este ID.");
+                    /* Trazendo ao usuário a possibilidade de tentar buscar novamente,
+                    baseado no valor de "escolha": caso corresponda aos números, serão
+                    realizadas as determinadas ações, caso corresponda a um número 
+                    inexistente ou inválido, é retornada uma mensagem de erro para que 
+                    o usuário digite uma opção válida.*/ 
                     System.out.println("Deseja tentar novamente? \n1 - Sim | 2 - Não");
                     escolha = scanner.nextInt();
                     if(escolha == 2) {
@@ -318,7 +403,10 @@ public class Main {
         } while(!achado);
     }
 
+    // Método para editar as informações de pessoa
     private static void editarPessoa(Scanner scanner) {
+        /* Configurando informações de verificação do cargo/papel da 
+        pessoa e de validações dos laços de repetição. */
         int opcaoEscolhida = 0;
         int idDaPessoa;
         boolean rodando = true;
@@ -326,21 +414,33 @@ public class Main {
         boolean ehTutor = false;
         boolean ehAdotante = false;
         Pessoa pessoaEditando = null;
+        // Inicializando o menu de edição de pessoa:
         System.out.println("\n--- Editar Pessoa ---");
 
+        // Enquanto rodando for true, serão exibidas as opções de edição de pessoa ao usuário.
         while(rodando) {
+            // Apresentando as opções de edição de pessoa ao usuário:
             System.out.println("Você gostaria de editar que pessoa?");
             System.out.println("1 - Funcionário");
             System.out.println("2 - Tutor");
             System.out.println("3 - Adotante");
             opcaoEscolhida = scanner.nextInt();
-            if(opcaoEscolhida != 1 && opcaoEscolhida != 2 && opcaoEscolhida != 3 && opcaoEscolhida != 4){
+            /* Caso a opção escolhida corresponda a um dos itens apresentados, 
+            "rodando" se torna false e então o menu de edição de pessoa é fechado.
+            Caso contrário, é exibida a mensagem de opção inválida.*/ 
+            if(opcaoEscolhida != 1 && opcaoEscolhida != 2 && opcaoEscolhida != 3){
                 System.out.println("Opção inválida!");
             } else {
                 rodando = false;
             }
         }
 
+        /* Se a opção corresponder a funcionário, será buscado o 
+        id do funcionário que o usuário deseja editar, e caso o funcionário
+        seja encontrado, as informações do mesmo poderão ser editadas por
+        meio do método "editarDadosBasicosPessoa()", e então a pessoaEditando
+        receberá o cargo de funcionário, e a boolean "ehFuncionario" será true, o que 
+        encerrará o laço de repetição. */ 
         if(opcaoEscolhida == 1){
             System.out.println("Digite o ID do Funcionário: ");
             idDaPessoa = scanner.nextInt();
@@ -355,7 +455,13 @@ public class Main {
                     }
                 }
             }
-        } else if(opcaoEscolhida == 2){
+        }
+        /* Se a opção corresponder a tutor, será buscado o 
+        id do tutor que o usuário deseja editar, e caso o tutor
+        seja encontrado, as informações do mesmo poderão ser editadas por
+        meio do método "editarDadosBasicosPessoa()", e então a pessoaEditando
+        receberá o cargo de tutor, e a boolean "ehTutor" será true. */  
+        else if(opcaoEscolhida == 2){
             System.out.println("Digite o ID do Tutor: ");
             idDaPessoa = scanner.nextInt();
             for (Pessoa pessoa : tutores){
@@ -369,7 +475,13 @@ public class Main {
                     }
                 }
             }
-        } else {
+        }
+        /* Se a opção corresponder a adotante, será buscado o 
+        id do adotante que o usuário deseja editar, e caso o adotante
+        seja encontrado, as informações do mesmo poderão ser editadas por
+        meio do método "editarDadosBasicosPessoa()", e então a pessoaEditando
+        receberá o cargo de adotante, e a boolean "ehAdotante" será true. */  
+        else if (opcaoEscolhida == 3){
             System.out.println("Digite o ID do Adotante: ");
             idDaPessoa = scanner.nextInt();
             for (Pessoa pessoa : adotantes){
@@ -384,7 +496,30 @@ public class Main {
                 }
             }
         }
+        /* Caso o usuário selecione uma opção inválida ou inexistente, 
+        ele terá a possibilidade de decidir se deseja tentar ou não
+        editar a pessoa novamente.*/ 
+        else {
+            int escolha;
+            do {
+                System.err.println("Opção inválida ou inexistente.");
+                System.out.println("Deseja tentar novamente? \n1 - Sim | 2 - Não");
+                escolha = scanner.nextInt();
+                if(escolha == 2) {
+                    rodando = false;
+                    break;
+                } else if(escolha == 1){
+                    System.out.println("\n");
+                    rodando = true;
+                } else {
+                    System.err.println("Digite uma opção válida.");
+                }
+            } while(escolha != 1 && escolha != 2);
+        }
 
+        /* Caso a pessoa selecionada pelo usuário para edição seja um funcionário, 
+        será permitida a edição das informações específicas de funcionário, como por
+        exemplo a data de contratação ou o departamento.*/
         if(ehFuncionario){
             System.out.println("\n- Edite os atributos específicos de funcionário -");
 
@@ -405,9 +540,12 @@ public class Main {
             scanner.nextLine();
             System.out.println("Departamento: (" + funcionario.getDepartamento() + "): ");
             String departamento = scanner.nextLine();
-        if(!departamento.isEmpty()) funcionario.setDepartamento(departamento);
+            if(!departamento.isEmpty()) funcionario.setDepartamento(departamento);
         }
 
+        /* Caso a pessoa selecionada pelo usuário para edição seja um tutor, 
+        será permitida a edição das informações específicas de tutor, como por
+        exemplo o número de animais do tutor e as adoções realizadas pelo mesmo.*/
         if(ehTutor){
             System.out.println("\n- Editar atributos específicos de tutor -");
 
@@ -427,6 +565,9 @@ public class Main {
             if(!status.isEmpty()) tutor.setStatus(status);
         }
 
+        /* Caso a pessoa selecionada pelo usuário para edição seja um adotante, 
+        será permitida a edição das informações específicas de adotante, como por
+        exemplo suas preferências de adoção e seu status.*/
         if(ehAdotante){
             System.out.println("\n- Editar atributos específicos de adotante -");
 
@@ -449,43 +590,60 @@ public class Main {
         System.out.println(pessoaEditando);
     }
 
+    /* Método utilizado para alterar informações básicas de uma pessoa, informações
+    essas que toda Pessoa, seja ela funcionário, tutor ou adotante terá, como CPF,
+    gênero, email, senha... */
     private static void editarDadosBasicosPessoa(Scanner scanner, Pessoa pessoa){
-        scanner.nextLine();
+        // scanner.nextLine();
+        // Permitindo a alteração do nome da pessoa.
         System.out.print("Nome (" + pessoa.getNome() + "): ");
         String nome = scanner.nextLine();
         if (!nome.isEmpty()) pessoa.setNome(nome);
 
+        // Permitindo a alteração da data de nascimento da pessoa.
         System.out.print("Data de Nascimento (" + pessoa.getDataDeNascimento() + "): ");
         String dataDeNascimento = scanner.nextLine();
         if (!dataDeNascimento.isEmpty()) pessoa.setDataDeNascimento(dataDeNascimento);
 
+        // Permitindo a alteração do gênero da pessoa.
         System.out.print("Gênero (" + pessoa.getGenero() + "): ");
         String genero = scanner.nextLine();
         if (!genero.isEmpty()) pessoa.setGenero(genero);
 
+        // Permitindo a alteração do CPF de cadastro da pessoa.
         System.out.print("CPF (" + pessoa.getCpf() + "): ");
         String cpf = scanner.nextLine();
         if (!cpf.isEmpty()) pessoa.setCpf(cpf);
 
+        // Permitindo a alteração do endereço da pessoa.
         System.out.print("Endereço (" + pessoa.getEndereco() + "): ");
         String endereco = scanner.nextLine();
         if (!endereco.isEmpty()) pessoa.setEndereco(endereco);
 
+        // Permitindo a alteração do telefone da pessoa.
         System.out.print("Telefone (" + pessoa.getTelefone() + "): ");
         String telefone = scanner.nextLine();
         if (!telefone.isEmpty()) pessoa.setTelefone(telefone);
 
+        // Permitindo a alteração do e-mail de cadastro da pessoa.
         System.out.print("Email (" + pessoa.getEmail() + "): ");
         String email = scanner.nextLine();
         if (!email.isEmpty()) pessoa.setEmail(email);
 
+        // Permitindo a alteração da senha de cadastro da pessoa.
         System.out.print("Senha (" + pessoa.getSenha() + "): ");
         String senha = scanner.nextLine();
         if (!senha.isEmpty()) pessoa.setSenha(senha);
     }
 
+    // Método utilizado para a geração de relatórios.
     private static void relatorio(Scanner scanner){
+        /* Configurando a variável opcaoEscolhidaValida como false 
+        para que seja disponibilizado de primeira o menu de relatórios. */ 
         boolean opcaoEscolhidaValida = false;
+        /* Caso a lista de pessoas esteja vazia, é retornada uma mensagem 
+        apontando que a lista está vazia, e a variável opcaoEscolhidaValida é
+        setada como true, para que o menu de relatórios não seja executado. */
         if(pessoas.isEmpty()){
             System.err.println("\nAinda não há pessoas registradas no sistema.");
             opcaoEscolhidaValida = true;
@@ -498,6 +656,10 @@ public class Main {
             System.out.println("4 - Lista de Adotantes");
             System.out.println("5 - Sair");
 
+            /* De acordo com a opção selecionada pelo usuário,
+            será realizada a ação correspondente exibida no menu de relatórios,
+            exibindo o relatório através de um laço de repetição que percorre
+            as listas dos itens correspondentes selecionados pelo usuário. */
             int relatorioDesejado = scanner.nextInt();
             if(relatorioDesejado == 1){
                 for(Pessoa pessoa : pessoas){
@@ -519,7 +681,12 @@ public class Main {
                     System.out.println(pessoa);
                     opcaoEscolhidaValida = true;
                 }
-            } else if(relatorioDesejado == 5){
+            }
+            /* Caso a opção selecionada pelo usuário seja para
+            sair, a variável opcaoEscolhaValida é setada como true,
+            e então o método para de rodar, e o menu de relatórios
+            é fechado. */ 
+            else if(relatorioDesejado == 5){
                 opcaoEscolhidaValida = true;
             } else {
                 System.err.println("Opção inválida!");
