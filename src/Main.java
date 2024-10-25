@@ -1,3 +1,4 @@
+import java.security.Provider;
 import java.util.*;
 import model.*;
 import services.*;
@@ -46,7 +47,8 @@ public class Main {
             System.out.println("3. Exibir informações de uma pessoa");
             System.out.println("4. Editar informações de uma pessoa");
             System.out.println("5. Relatórios");
-            System.out.println("6. Sair");
+            System.out.println("6. Exibir itens");
+            System.out.println("7. Sair");
 
             /* De acordo com a escolha do usuário, será realizada
             a ação correspondente ao descrito no menu de inicialização,
@@ -73,6 +75,20 @@ public class Main {
                     Services.relatorio(scanner);
                     break;
                 case 6:
+                    System.out.println("Escolha o que deseja exibir:");
+                    System.out.println("1. Pessoas");
+                    System.out.println("2. Animais");
+                    int opcao = scanner.nextInt();
+                    if (opcao == 1) {
+                        Services.exibirPessoasTabela();
+                    } else if (opcao == 2) {
+                        Services.exibirAnimaisTabela();
+                    } else {
+                        System.out.println("Opção inválida. Tente novamente.");
+                    }
+                    scanner.nextLine();
+                    break;
+                case 7:
                     running = false;
                     System.out.println("Saindo...");
                     break;
@@ -83,3 +99,4 @@ public class Main {
         scanner.close();
     }
 }
+

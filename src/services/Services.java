@@ -1,4 +1,5 @@
 package services;
+import com.sun.tools.javac.Main;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import model.*;
@@ -757,4 +758,44 @@ public class Services {
                 statusAdocao
         );
     }
+    public static void exibirPessoasTabela() {
+        String linha = "+----------------+----------------+-------------+-------------+--------------+----------------+---------------------+-----------------------------+-----------------------+";
+        System.out.println(linha);
+        System.out.printf("| %-14s | %-14s | %-11s | %-11s | %-12s | %-14s | %-19s | %-27s | %-21s |%n", "Nome", "Data Nasc.", "Gênero", "CPF", "Endereço", "Telefone", "Email", "Cargos", "Data Contratação");
+        System.out.println(linha);
+
+        for (Pessoa pessoa : pessoas) {
+            String cargos = String.join(", ", pessoa.getPapeis().keySet());
+            String dataContratacao = "";
+
+            if (pessoa instanceof Funcionario) {
+                dataContratacao = ((Funcionario) pessoa).getDataContratacao();
+            }
+
+            System.out.printf("| %-14s | %-14s | %-11s | %-11s | %-12s | %-14s | %-19s | %-27s | %-21s |%n", pessoa.getNome(), pessoa.getDataDeNascimento(), pessoa.getGenero(), pessoa.getCpf(), pessoa.getEndereco(), pessoa.getTelefone(), pessoa.getEmail(), cargos, dataContratacao);
+        }
+        System.out.println(linha);
+    }
+
+    public static void exibirAnimaisTabela() {
+        String linha = "+----------------+----------------+-------------+-------------+--------------+----------------+---------------------+-----------------------------+-----------------------+";
+        System.out.printf("| %-20s | %-20s | %-14s | %-10s | %-12s | %-20s | %-20s | %-25s |\n", 
+                "Nome", "Espécie", "Raça", "Idade", "Sexo", "Histórico Médico", "Data do Resgate", "Status da Adoção");
+        System.out.println(linha);
+
+        for (Animal animal : Main.animais) {
+            System.out.printf("| %-20s | %-20s | %-14s | %-10d | %-12s | %-20s | %-20s | %-25s |\n", 
+                    animal.getNome(), 
+                    animal.getEspecie(), 
+                    animal.getRaca(), 
+                    animal.getIdade(), 
+                    animal.getSexo(), 
+                    animal.getHistoricoMedico(), 
+                    animal.getDataDeResgate(), 
+                    animal.getStatusDeAdocao());
+        }
+        System.out.println(linha);
+    }
+
+
 }
