@@ -9,11 +9,13 @@ public class Animal {
     private int idade;
     private String sexo;
     private String historicoMedico;
-    private Date dataDeResgate;
-    private String foto;
-    private String statysDeAdocao;
 
-    public Animal(String nome, String especie, String raca, int idade, String sexo, String historicoMedico, Date dataDeResgate, String foto, String statysDeAdocao) {
+    // Mudar para Date futuramente
+    private String dataDeResgate;
+    private String foto;
+    private String statusDeAdocao;
+
+    public Animal(String nome, String especie, String raca, int idade, String sexo, String historicoMedico, String dataDeResgate, String foto, String statusDeAdocao) {
         this.nome = nome;
         this.especie = especie;
         this.raca = raca;
@@ -22,7 +24,7 @@ public class Animal {
         this.historicoMedico = historicoMedico;
         this.dataDeResgate = dataDeResgate;
         this.foto = foto;
-        this.statysDeAdocao = statysDeAdocao;
+        this.statusDeAdocao = statusDeAdocao;
     }
 
     public String getNome() {
@@ -73,11 +75,11 @@ public class Animal {
         this.sexo = sexo;
     }
 
-    public Date getDataDeResgate() {
+    public String getDataDeResgate() {
         return dataDeResgate;
     }
 
-    public void setDataDeResgate(Date dataDeResgate) {
+    public void setDataDeResgate(String dataDeResgate) {
         this.dataDeResgate = dataDeResgate;
     }
 
@@ -89,11 +91,26 @@ public class Animal {
         this.foto = foto;
     }
 
-    public String getStatysDeAdocao() {
-        return statysDeAdocao;
+    public String getStatusDeAdocao() {
+        return statusDeAdocao;
     }
 
-    public void setStatysDeAdocao(String statysDeAdocao) {
-        this.statysDeAdocao = statysDeAdocao;
+    public void setStatusDeAdocao(String statysDeAdocao) {
+        this.statusDeAdocao = statysDeAdocao;
+    }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "nome='" + nome + '\'' +
+                ", especie='" + especie + '\'' +
+                ", raca='" + raca + '\'' +
+                ", idade=" + idade +
+                ", sexo='" + sexo + '\'' +
+                ", historicoMedico='" + historicoMedico + '\'' +
+                ", dataDeResgate='" + dataDeResgate + '\'' +
+                ", foto='" + foto + '\'' +
+                ", statusDeAdocao='" + statusDeAdocao + '\'' +
+                '}';
     }
 }
