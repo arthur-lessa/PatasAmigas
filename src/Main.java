@@ -48,7 +48,8 @@ public class Main {
             System.out.println("4. Editar informações de uma pessoa");
             System.out.println("5. Relatórios");
             System.out.println("6. Exibir itens");
-            System.out.println("7. Sair");
+            System.out.println("7. Buscar animal de preferência");
+            System.out.println("8. Sair");
 
             /* De acordo com a escolha do usuário, será realizada
             a ação correspondente ao descrito no menu de inicialização,
@@ -89,6 +90,9 @@ public class Main {
                     scanner.nextLine();
                     break;
                 case 7:
+                    Services.buscaPorPreferencia(scanner);
+                    break;
+                case 8:
                     running = false;
                     System.out.println("Saindo...");
                     break;
@@ -99,4 +103,3 @@ public class Main {
         scanner.close();
     }
 }
-

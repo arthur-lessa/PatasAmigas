@@ -95,8 +95,8 @@ public class Animal {
         return statusDeAdocao;
     }
 
-    public void setStatusDeAdocao(String statysDeAdocao) {
-        this.statusDeAdocao = statysDeAdocao;
+    public void setStatusDeAdocao(String statusDeAdocao) {
+        this.statusDeAdocao = statusDeAdocao;
     }
 
     @Override

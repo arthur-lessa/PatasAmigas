@@ -12,6 +12,7 @@ public class Services {
     public static ArrayList<Funcionario> funcionarios = new ArrayList<Funcionario>();
     public static ArrayList<Tutor> tutores = new ArrayList<>();
     public static ArrayList<Adotante> adotantes = new ArrayList<>();
+    public static ArrayList<Animal> animais = new ArrayList<>();
 
     // Atribuindo às entidades um id para que possam ser
     //localizadas e identificadas com maior facilidade
@@ -719,14 +720,11 @@ public class Services {
         System.out.println("2 - Reservado");
         System.out.println("3 - Adotado");
         System.out.println("4 - Adoção temporária (lar temporário)");
-        int statusEscolhido = scanner.nextInt();
-        scanner.nextLine();
+        int statusEscolhido = 0;
 
         String statusAdocao = "";
-        while (statusEscolhido != 1 &&
-               statusEscolhido != 2 &&
-               statusEscolhido != 3 &&
-               statusEscolhido != 4){
+        do {
+            statusEscolhido = scanner.nextInt();
             switch (statusEscolhido){
                 case 1:
                     statusAdocao = "Disponível";
@@ -744,7 +742,10 @@ public class Services {
                     System.err.println("Você digitou um número inválido. Digite novamente");
                     break;
             }
-        }
+        } while (statusEscolhido != 1 &&
+                statusEscolhido != 2 &&
+                statusEscolhido != 3 &&
+                statusEscolhido != 4);
 
         Animal novoAnimal = new Animal(
                 nome,
@@ -757,11 +758,12 @@ public class Services {
                 "",
                 statusAdocao
         );
+        animais.add(novoAnimal);
     }
     public static void exibirPessoasTabela() {
-        String linha = "+----------------+----------------+-------------+-------------+--------------+----------------+---------------------+-----------------------------+-----------------------+";
+        String linha = "+----------------+----------------+-------------+----------------+--------------+----------------+---------------------+-----------------------------+-----------------------+";
         System.out.println(linha);
-        System.out.printf("| %-14s | %-14s | %-11s | %-11s | %-12s | %-14s | %-19s | %-27s | %-21s |%n", "Nome", "Data Nasc.", "Gênero", "CPF", "Endereço", "Telefone", "Email", "Cargos", "Data Contratação");
+        System.out.printf("| %-14s | %-14s | %-11s | %-14s | %-12s | %-14s | %-19s | %-27s | %-21s |%n", "Nome", "Data Nasc.", "Gênero", "CPF", "Endereço", "Telefone", "Email", "Cargos", "Data Contratação");
         System.out.println(linha);
 
         for (Pessoa pessoa : pessoas) {
@@ -772,18 +774,19 @@ public class Services {
                 dataContratacao = ((Funcionario) pessoa).getDataContratacao();
             }
 
-            System.out.printf("| %-14s | %-14s | %-11s | %-11s | %-12s | %-14s | %-19s | %-27s | %-21s |%n", pessoa.getNome(), pessoa.getDataDeNascimento(), pessoa.getGenero(), pessoa.getCpf(), pessoa.getEndereco(), pessoa.getTelefone(), pessoa.getEmail(), cargos, dataContratacao);
+            System.out.printf("| %-14s | %-14s | %-11s | %-14s | %-12s | %-14s | %-19s | %-27s | %-21s |%n", pessoa.getNome(), pessoa.getDataDeNascimento(), pessoa.getGenero(), pessoa.getCpf(), pessoa.getEndereco(), pessoa.getTelefone(), pessoa.getEmail(), cargos, dataContratacao);
         }
         System.out.println(linha);
     }
 
     public static void exibirAnimaisTabela() {
         String linha = "+----------------+----------------+-------------+-------------+--------------+----------------+---------------------+-----------------------------+-----------------------+";
+        System.out.println(linha);
         System.out.printf("| %-20s | %-20s | %-14s | %-10s | %-12s | %-20s | %-20s | %-25s |\n", 
                 "Nome", "Espécie", "Raça", "Idade", "Sexo", "Histórico Médico", "Data do Resgate", "Status da Adoção");
         System.out.println(linha);
 
-        for (Animal animal : Main.animais) {
+        for (Animal animal : animais) {
             System.out.printf("| %-20s | %-20s | %-14s | %-10d | %-12s | %-20s | %-20s | %-25s |\n", 
                     animal.getNome(), 
                     animal.getEspecie(), 
@@ -797,5 +800,33 @@ public class Services {
         System.out.println(linha);
     }
 
+    public static void buscaPorPreferencia(Scanner scanner){
+        int idDoAdotante;
+        System.out.println("Digite o ID do Adotante: ");
+        idDoAdotante = scanner.nextInt();
+        for (Adotante adotante : adotantes){
+            if(adotante.containsKey("idAdotante")){
+                if(adotante.pegaValor("idAdotante") == idDoAdotante){
+
+                    String preferencia = adotante.getPreferenciasDeAdocao();
+                    System.out.println("Adotante identificado.");
+                    System.out.println("Nome: " + adotante.getNome() + ", Preferência de Adoção: " + preferencia);
+
+                    for(Animal animal : animais){
+
+                        if(preferencia.equalsIgnoreCase(animal.getEspecie()) ||
+                        preferencia.equalsIgnoreCase(animal.getRaca()) || 
+                        preferencia.equalsIgnoreCase(animal.getHistoricoMedico())||
+                        preferencia.equalsIgnoreCase(animal.getSexo())||
+                        preferencia.equalsIgnoreCase(animal.getStatusDeAdocao())||
+                        String.valueOf(animal.getIdade()).equalsIgnoreCase(preferencia)){
+                            System.out.println(animal);
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
 
 }
